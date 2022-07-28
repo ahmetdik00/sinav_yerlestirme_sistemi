@@ -15,6 +15,7 @@ class Sinif extends Model
         'sinav_ili',
         'universite',
         'fakulte',
+        'kat',
         'sinif',
         'kapasite'
     ];

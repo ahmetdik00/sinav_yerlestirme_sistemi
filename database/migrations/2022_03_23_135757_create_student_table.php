@@ -14,20 +14,15 @@ class CreateStudentTable extends Migration
     public function up()
     {
         Schema::create('student', function (Blueprint $table) {
+
             $table->id();
-            $table->integer('aday_no');
-            $table->integer('kimlik_no');
-            $table->string('ad', 50);
-            $table->string('soyad', 50);
-            $table->string('baba_adi', 50);
-            $table->string('dogum_yeri', 50);
-            $table->date('dogum_tarihi');
-            $table->string('uyruk', 50);
-            $table->string('sinav_ili', 50);
-            $table->string('universite', 50);
-            $table->string('fakulte', 50);
-            $table->string('sinif', 20);
-            $table->integer('sira');
+            $table->string('aday_no')->unique();
+            $table->string('kimlik_no')->unique();
+            $table->string('name');
+            $table->string('email');
+            $table->string('password');
+            $table->boolean('authorization')->default(0);
+            $table->rememberToken();
 
             $table->timestamp('created_at')->useCurrent();
             $table->timestamp('updated_at')->useCurrent()->useCurrentOnUpdate();

@@ -6,7 +6,7 @@
         <div class="container-fluid">
             <div class="row mb-2">
                 <div class="col-sm-6">
-                    <h1>Sınıf Bilgileri Düzeneme</h1>
+                    <h1>Sınıf Bilgileri Düzenleme</h1>
                 </div>
                 <div class="col-sm-6 text-right">
                     <ol class="breadcrumb float-sm-right">
@@ -23,10 +23,10 @@
         <div class="container-fluid">
             <!-- /.row -->
             <div class="row">
-                <div class="col-md-6">
-                    <div class="card card-primary">
+                <div class="col-md-12">
+                    <div class="card card callout callout-info">
                         <div class="card-header">
-                            <h3 class="card-title">Sınıf</h3>
+                            <h3 class="card-title">Sınıf Düzenle</h3>
                         </div>
                         <div class="card-body">
                             <!-- Date -->
@@ -53,6 +53,11 @@
                                 </div>
 
                                 <div class="form-group">
+                                    <label>Fakulte:</label>
+                                    <input type="text" name="kat" value="{{ $sinif->kat }}" class="form-control"/>
+                                </div>
+
+                                <div class="form-group">
                                     <label>Sınıf:</label>
                                     <input type="text" name="sinif" value="{{ $sinif->sinif }}" class="form-control"/>
                                 </div>
@@ -62,8 +67,8 @@
                                     <input type="number" name="kapasite" value="{{ $sinif->kapasite }}" class="form-control"/>
                                 </div>
 
-                                <div class="form-group d-flex justify-content-end mt-lg-5">
-                                    <button type="submit" class="btn btn-block btn-primary w-25">Kaydet</button>
+                                <div class="form-group mt-lg-5">
+                                    <button type="submit" class="btn btn-block btn-info" style="width:100px ">Güncelle</button>
                                 </div>
                             </form>
                         </div>

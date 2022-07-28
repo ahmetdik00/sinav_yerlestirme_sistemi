@@ -1,7 +1,7 @@
 <aside class="main-sidebar sidebar-dark-primary elevation-4">
     <!-- Brand Logo -->
     <a href="{{ route('admin') }}" class="brand-link  mb-2">
-        <img src="{{ asset('img/AdminLTELogo.png') }}" alt="AdminLTE Logo" class="brand-image img-circle elevation-3" style="opacity: .8">
+        <img src="{{ asset('img/image001.png') }}" alt="MKU Logo" class="brand-image img-circle elevation-3" style="opacity: .8">
         <span class="brand-text font-weight-light">Admin</span>
     </a>
 
@@ -27,44 +27,86 @@
                 <!-- Add icons to the links using the .nav-icon class
                      with font-awesome or any other icon font library -->
                 <li class="nav-item menu-open">
-                    <a href="{{ route('admin') }}" class="nav-link active">
+                    <a class="nav-link  {{ (request()->is('admin') || request()->is('admin/ogrenciler*')) ? 'active' : '' }}">
                         <i class="nav-icon fas fa-tachometer-alt"></i>
                         <p>
-                            Starter Pages
+                            Öğrenci İşlemleri
                             <i class="right fas fa-angle-left"></i>
                         </p>
                     </a>
                     <ul class="nav nav-treeview">
                         <li class="nav-item">
-                            <a href="{{ route('import') }}" class="nav-link {{ (request()->is('admin/students*')) ? 'active' : '' }}">
-                                <i class="fas fa-upload nav-icon"></i>
-                                <p>Students</p>
+                            <a href="{{ route('ogrenci-listele') }}" class="nav-link {{ (request()->is('admin/ogrenciler/ogrenci-listele')) ? 'active' : '' }}">
+                                <i class="far fa-circle nav-icon"></i>
+                                <p>Öğrenci Listesi</p>
                             </a>
                         </li>
                         <li class="nav-item">
-                            <a href="{{ route('class-assignments') }}" class="nav-link {{ (request()->is('admin/class-assignments*')) ? 'active' : '' }}">
-                                <i class="fas fa-users nav-icon"></i>
-                                <p>Class Assignments
-                                </p>
-                            </a>
-                        </li>
-                        <li class="nav-item">
-                            <a href="{{ route('exam-document') }}" class="nav-link {{ (request()->is('admin/exam-document*')) ? 'active' : '' }}">
-                                <i class="fas fa-file-alt nav-icon"></i>
-                                <p>Exam Document</p>
+                            <a href="{{ route('ogrenciler') }}" class="nav-link {{ (request()->is('admin/ogrenciler')) ? 'active' : '' }}">
+                                <i class="far fa-circle nav-icon"></i>
+                                <p>Öğrenci Dosyadan Yükle</p>
                             </a>
                         </li>
                     </ul>
                 </li>
-                {{--<li class="nav-item">
-                    <a href="" class="nav-link">
-                        <i class="nav-icon fas fa-file-alt"></i>
+                <li class="nav-item menu-open">
+                    <a class="nav-link  {{ (request()->is('admin/siniflar*')) ? 'active' : '' }}">
+                        <i class="nav-icon fas fa-users nav-icon"></i>
                         <p>
-                            Exam Document
-                            <span class="right badge badge-danger">New</span>
+                            Sınıf İşlemleri
+                            <i class="right fas fa-angle-left"></i>
                         </p>
                     </a>
-                </li>--}}
+                    <ul class="nav nav-treeview">
+                        <li class="nav-item">
+                            <a href="{{ route('sinif-listele') }}" class="nav-link {{ (request()->is('admin/siniflar/sinif-listele')) ? 'active' : '' }}">
+                                <i class="far fa-circle nav-icon"></i>
+                                <p>Sınıflar</p>
+                            </a>
+                        </li>
+                        <li class="nav-item">
+                            <a href="{{ route('sinif-ekle') }}" class="nav-link {{ (request()->is('admin/siniflar/sinif-ekle')) ? 'active' : '' }}">
+                                <i class="far fa-circle nav-icon"></i>
+                                <p>Yeni Sınıf Ekle</p>
+                            </a>
+                        </li>
+                        <li class="nav-item">
+                            <a href="{{ route('siniflar') }}" class="nav-link {{ (request()->is('admin/siniflar')) ? 'active' : '' }}">
+                                <i class="far fa-circle nav-icon"></i>
+                                <p>Sınıfları Dosyadan Yükle</p>
+                            </a>
+                        </li>
+                    </ul>
+                </li>
+                <li class="nav-item menu-open">
+                    <a class="nav-link  {{ (request()->is('admin/sinav*')) ? 'active' : '' }}">
+                        <i class="nav-icon fas fa-users nav-icon"></i>
+                        <p>
+                            Sınav İşlemleri
+                            <i class="right fas fa-angle-left"></i>
+                        </p>
+                    </a>
+                    <ul class="nav nav-treeview">
+                        <li class="nav-item">
+                            <a href="{{ route('sinav') }}" class="nav-link  {{ (request()->is('admin/sinav')) ? 'active' : '' }}">
+                                <i class="far fa-circle nav-icon"></i>
+                                <p>Sınav Yerleştirme</p>
+                            </a>
+                        </li>
+                        <li class="nav-item">
+                            <a href="{{ route('sinav-siniflari') }}" class="nav-link  {{ (request()->is('admin/sinav/sinav-siniflari')) ? 'active' : '' }}">
+                                <i class="far fa-circle nav-icon"></i>
+                                <p>Sınav Sınıfları</p>
+                            </a>
+                        </li>
+                        <li class="nav-item">
+                            <a href="{{ route('sinav-sonuclari') }}" class="nav-link  {{ (request()->is('admin/sinav/sinav-sonuclari')) ? 'active' : '' }}">
+                                <i class="far fa-circle nav-icon"></i>
+                                <p>Sınav Sonuçları Yükle</p>
+                            </a>
+                        </li>
+                    </ul>
+                </li>
             </ul>
         </nav>
         <!-- /.sidebar-menu -->

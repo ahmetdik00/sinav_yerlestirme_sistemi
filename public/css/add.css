@@ -1,0 +1,61 @@
+.td {
+    width: 300px;
+}
+
+.tdc {
+    width: 200px;
+}
+
+.f-s {
+    font-size: 15px;
+}
+
+.bt {
+    width: 120px;
+}
+
+.tabled {
+    width: 800px;
+    color: #111111;
+    margin-bottom:1rem;
+    background-color:transparent;
+    font-weight: bold;
+}
+
+.tabled td,.tabled th {
+    padding-left:4px;
+    vertical-align:top;
+    border-top:1px solid #111111;
+}
+
+.tabled thead th {
+    vertical-align:bottom;
+    border-bottom:2px solid #111111
+}
+
+.tabled tbody+tbody {
+    border-top:2px solid #111111
+}
+
+.table-borderedd {
+    border:1px solid #111111
+}
+
+.table-borderedd td,.table-borderedd th  {
+    border:1px solid #111111
+}
+
+.slim {
+    font-weight: 500;
+}
+
+.pad {
+    padding: 0;
+}
+
+a.href {
+    color: red;
+    background: #6cdbff;
+}
+
+

@@ -16,16 +16,21 @@ class CreateStudentInfo extends Migration
         Schema::create('student_info', function (Blueprint $table) {
             $table->id();
             $table->integer('aday_no')->unsigned()->unique();
-            $table->bigInteger('kimlik_no', )->unsigned()->unique();
-            $table->string('ad', 50);
-            $table->string('soyad', 50);
+            $table->string('aday_resim')->unique();
+            $table->string('basvuru_tarihi', 20)->nullable();
+            $table->string('onay_tarihi', 20)->nullable();
+            $table->string('kimlik_no')->unique();
+            $table->string('ad_soyad', 50);
             $table->string('baba_adi', 50);
             $table->string('dogum_yeri', 50);
-            $table->date('dogum_tarihi');
+            $table->string('dogum_tarihi', 20);
             $table->string('uyruk', 50);
+            $table->string('cinsiyet', 50);
+            $table->string('tel_no', 15)->unique();
+            $table->string('email', 50)->unique();
+            $table->string('mezuniyet_tarihi', 20)->nullable();
 
-            $table->timestamp('created_at')->useCurrent();
-            $table->timestamp('updated_at')->useCurrent()->useCurrentOnUpdate();
+            $table->timestamps();
             $table->softDeletes();
         });
     }

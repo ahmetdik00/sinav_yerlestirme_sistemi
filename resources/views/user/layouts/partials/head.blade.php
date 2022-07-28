@@ -6,3 +6,5 @@
 <link rel="stylesheet" href="{{ asset('plugins/flag-icon-css/css/flag-icon.min.css') }}">
 <!-- Theme style -->
 <link rel="stylesheet" href="{{ asset('css/adminlte.min.css') }}">
+<link rel="stylesheet" href="{{ asset('css/add.css') }}">
+<link rel="icon" type="image/x-icon" href="{{ asset('image001_dgM2Tv.ico') }}">

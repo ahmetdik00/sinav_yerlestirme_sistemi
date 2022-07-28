@@ -16,10 +16,12 @@ class CreateClassTable extends Migration
         Schema::create('class', function (Blueprint $table) {
             $table->id();
             $table->string('sinav_ili', 20);
-            $table->string('universite', 30);
-            $table->string('fakulte', 30);
+            $table->string('universite', 50);
+            $table->string('fakulte', 50);
+            $table->string('kat', 10);
             $table->string('sinif', 10);
             $table->integer('kapasite');
+            $table->integer('yerlesen_ogrenci')->default(0);
             $table->timestamps();
         });
     }
