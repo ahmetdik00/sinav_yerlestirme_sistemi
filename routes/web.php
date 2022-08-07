@@ -1,7 +1,10 @@
 <?php
 
 use App\Http\Controllers\AdminController;
+use App\Http\Controllers\ClassController;
+use App\Http\Controllers\ExamController;
 use App\Http\Controllers\LoginController;
+use App\Http\Controllers\StudentController;
 use App\Http\Controllers\UserController;
 use Illuminate\Support\Facades\Route;
 
@@ -26,34 +29,34 @@ Route::post('/kullanici-dogrula', [LoginController::class, 'authetication']);
 Route::prefix('admin')->middleware('admin')->group(function () {
     Route::get('/', [AdminController::class, 'index'])->name('admin');
 
-    Route::get('ogrenciler', [AdminController::class, 'students'])->name('ogrenciler');
-    Route::post('ogrenciler', [AdminController::class, 'addStudent'])->name('ogrenci-ekle');
-    Route::get('ogrenciler/ogrenci-listele', [AdminController::class, 'listStudentData'])->name('ogrenci-listele');
-    Route::get('ogrenciler/sil', [AdminController::class, 'deleteAllstudent']);
-    Route::get('ogrenciler/giris-belgesi/{aday_no}', [AdminController::class, 'entryDocument'])->name('giris-belgesi');
-    Route::get('ogrenciler/giris-belgesi/yazdir/{aday_no?}', [AdminController::class, 'entryDocumentPrint'])->name('giris-belgesi-pdf');
-    Route::get('ogrenciler/sonuc-belgesi/{aday_no}/{email}', [AdminController::class, 'resultDocument'])->name('sonuc-belgesi');
-    Route::get('ogrenciler/sonuc-belgesi/yazdir/{aday_no}/{email}', [AdminController::class, 'resultDocumentPrint'])->name('sonuc-belgesi-pdf');
-    Route::get('ogrenciler/sonuc-bilgileri/sil', [AdminController::class, 'deleteAllResultOfExam'])->name('sonucları-sil');
+    Route::get('ogrenciler', [StudentController::class, 'students'])->name('ogrenciler');
+    Route::post('ogrenciler', [StudentController::class, 'addStudent'])->name('ogrenci-ekle');
+    Route::get('ogrenciler/ogrenci-listele', [StudentController::class, 'listStudentData'])->name('ogrenci-listele');
+    Route::get('ogrenciler/sil', [StudentController::class, 'deleteAllstudent']);
+    Route::get('ogrenciler/giris-belgesi/{aday_no}', [StudentController::class, 'entryDocument'])->name('giris-belgesi');
+    Route::get('ogrenciler/giris-belgesi/yazdir/{aday_no?}', [StudentController::class, 'entryDocumentPrint'])->name('giris-belgesi-pdf');
+    Route::get('ogrenciler/sonuc-belgesi/{aday_no}/{email}', [StudentController::class, 'resultDocument'])->name('sonuc-belgesi');
+    Route::get('ogrenciler/sonuc-belgesi/yazdir/{aday_no}/{email}', [StudentController::class, 'resultDocumentPrint'])->name('sonuc-belgesi-pdf');
+    Route::get('ogrenciler/sonuc-bilgileri/sil', [StudentController::class, 'deleteAllResultOfExam'])->name('sonucları-sil');
 
-    Route::get('siniflar', [AdminController::class, 'classes'])->name('siniflar');
-    Route::post('siniflar', [AdminController::class, 'addClasses'])->name('siniflar-ekle');
-    Route::get('siniflar/sinif-ekle', [AdminController::class, 'addClass'])->name('sinif-ekle');
-    Route::post('siniflar/sinif-ekle', [AdminController::class, 'addClassData']);
-    Route::get('siniflar/sinif-listele', [AdminController::class, 'listClassData'])->name('sinif-listele');
-    Route::get('siniflar/sinif-duzenle/{id}', [AdminController::class, 'editClass'])->name('sinif');
-    Route::post('siniflar/sinif-duzenle', [AdminController::class, 'updateClass'])->name('sinif-duzenle');
-    Route::get('siniflar/sinif-listele/sil/{id}', [AdminController::class, 'deleteClass']);
-    Route::get('siniflar/sil', [AdminController::class, 'deleteAllclass']);
+    Route::get('siniflar', [ClassController::class, 'classes'])->name('siniflar');
+    Route::post('siniflar', [ClassController::class, 'addClasses'])->name('siniflar-ekle');
+    Route::get('siniflar/sinif-ekle', [ClassController::class, 'addClass'])->name('sinif-ekle');
+    Route::post('siniflar/sinif-ekle', [ClassController::class, 'addClassData']);
+    Route::get('siniflar/sinif-listele', [ClassController::class, 'listClassData'])->name('sinif-listele');
+    Route::get('siniflar/sinif-duzenle/{id}', [ClassController::class, 'editClass'])->name('sinif');
+    Route::post('siniflar/sinif-duzenle', [ClassController::class, 'updateClass'])->name('sinif-duzenle');
+    Route::get('siniflar/sinif-listele/sil/{id}', [ClassController::class, 'deleteClass']);
+    Route::get('siniflar/sil', [ClassController::class, 'deleteAllclass']);
 
 
-    Route::get('sinav', [AdminController::class, 'exam'])->name('sinav');
-    Route::get('sinav-yerlestir', [AdminController::class, 'examPlace'])->name('sinif-yerlestir');
-    Route::get('sinav/sinif-goruntule/{universite}/{sinif}', [AdminController::class, 'showClass'])->name('sinif-goruntule');
-    Route::get('sinav/sil', [AdminController::class, 'deleteAllPlaces']);
-    Route::get('sinav/sinav-siniflari', [AdminController::class, 'listExamClass'])->name('sinav-siniflari');
-    Route::get('sinav/sinav-sonuclari', [AdminController::class, 'resultOfExam'])->name('sinav-sonuclari');
-    Route::post('sinav/sinav-sonuclari', [AdminController::class, 'uploadResultOfExam'])->name('sinav-sonuclari-yukle');
+    Route::get('sinav', [ExamController::class, 'exam'])->name('sinav');
+    Route::get('sinav-yerlestir', [ExamController::class, 'examPlace'])->name('sinif-yerlestir');
+    Route::get('sinav/sinif-goruntule/{universite}/{sinif}', [ExamController::class, 'showClass'])->name('sinif-goruntule');
+    Route::get('sinav/sil', [ExamController::class, 'deleteAllPlaces']);
+    Route::get('sinav/sinav-siniflari', [ExamController::class, 'listExamClass'])->name('sinav-siniflari');
+    Route::get('sinav/sinav-sonuclari', [ExamController::class, 'resultOfExam'])->name('sinav-sonuclari');
+    Route::post('sinav/sinav-sonuclari', [ExamController::class, 'uploadResultOfExam'])->name('sinav-sonuclari-yukle');
 });
 
 

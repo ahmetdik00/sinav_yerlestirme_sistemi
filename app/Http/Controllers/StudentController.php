@@ -2,41 +2,88 @@
 
 namespace App\Http\Controllers;
 
+use App\Imports\StudentImport;
+use App\Models\Sinif;
+use App\Models\Student;
 use App\Models\StudentInfo;
 use Dompdf\Dompdf;
+use Exception;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\Hash;
 
-class UserController extends Controller
+class StudentController extends Controller
 {
-    public function index()
+    /* ÖĞRENCİLER */
+
+    public function students()
     {
-        $count =  DB::table('sinav_giris_belge')->where('kimlik_no', session('kimlik_no'))->count('kimlik_no');
-        $countSonuc =  DB::table('sinav_sonuc_belge')->where('email', session('email'))->count('email');
-        $students = StudentInfo::where('kimlik_no', session('kimlik_no'))->get();
-        $student = $students[0];
-        return view('user.index', compact('student', 'count', 'countSonuc'));
+        $students = StudentInfo::all();
+        return view('admin.pages.add-student', compact('students'));
     }
 
-    public function entryDocument()
+    public function addStudent(Request $request)
     {
-        $count =  DB::table('sinav_giris_belge')->where('kimlik_no', session('kimlik_no'))->count('kimlik_no');
-        $countSonuc =  DB::table('sinav_sonuc_belge')->where('email', session('email'))->count('email');
-        $students =  DB::table('sinav_giris_belge')
+        $file = $request->file('file')->store('student');
+        if (empty($file))
+        {
+            return back()
+                ->with('message_warning', 'Lütfen herhangi bir dosya seçin...');
+        }
+        else
+        {
+            try {
+                $import = new StudentImport();
+                $import->import($file);
+                $newStudents = StudentInfo::latest()->take($import->getRowCount())->get();
+                foreach ($newStudents as $student)
+                {
+                    Student::insertOrIgnore([
+                        'aday_no' => $student->aday_no,
+                        'kimlik_no' => $student->kimlik_no,
+                        'name' => $student->ad_soyad,
+                        'email' => $student->email,
+                        'password' => Hash::make(substr($student->kimlik_no, -5))
+                    ]);
+                }
+
+                return back()->with('message_success', 'Excel dosyası başarıyla aktarıldı.');
+            } catch (Exception $e) {
+                return back()
+                    ->with('message_error', $e->getMessage()/*'Yüklemeye çalıştığınız veriler, veritabanında kayıtlı verilerle aynı veya verilerde bir hata var!'*/);
+
+            }
+        }
+    }
+
+    public function listStudentData()
+    {
+
+        $students = StudentInfo::all();
+
+        $countEntry = DB::table('sinav_giris_belge')->count('id');
+
+        $countResult = DB::table('sinav_sonuc_belge')->count('id');
+        return view('admin.pages.list-student-data', compact('students', 'countResult', 'countEntry'));
+    }
+
+    public function entryDocument($aday_no)
+    {
+        $entryDocuments = DB::table('sinav_giris_belge')
             ->join('student_info', 'sinav_giris_belge.aday_no', '=', 'student_info.aday_no')
             ->select('sinav_giris_belge.*', 'student_info.aday_resim')
-            ->where('sinav_giris_belge.kimlik_no', session('kimlik_no'))
+            ->where('sinav_giris_belge.aday_no',  $aday_no)
             ->get();
-        $student = $students[0];
-        return view('user.pages.exam-entry-document', compact('student', 'count', 'countSonuc'));
+        $entryDocument = $entryDocuments[0];
+        return view('admin.pages.panel.entry-document', compact('entryDocument'));
     }
 
-    public function entryDocumentPrintOut()
+    public function entryDocumentPrint($aday_no)
     {
         $students =  DB::table('sinav_giris_belge')
             ->join('student_info', 'sinav_giris_belge.aday_no', '=', 'student_info.aday_no')
             ->select('sinav_giris_belge.*', 'student_info.aday_resim')
-            ->where('sinav_giris_belge.kimlik_no', session('kimlik_no'))
+            ->where('sinav_giris_belge.aday_no', $aday_no)
             ->get();
         $student = $students[0];
 
@@ -202,32 +249,26 @@ class UserController extends Controller
 
         // Output the generated PDF to Browser
         return back()->with($dompdf->stream('HMKÜYÖS - 2022 SINAV GİRİŞ BELGESİ'));
-
     }
 
-    public function resultDocument()
+    public function resultDocument($aday_no, $email)
     {
-        $count =  DB::table('sinav_giris_belge')->where('kimlik_no', session('kimlik_no'))->count('kimlik_no');
-        $countSonuc =  DB::table('sinav_sonuc_belge')->where('email', session('email'))->count('email');
-        $students =  DB::table('sinav_giris_belge')
-            ->join('student_info', 'sinav_giris_belge.aday_no', '=', 'student_info.aday_no')
-            ->select('sinav_giris_belge.*', 'student_info.aday_resim')
-            ->where('sinav_giris_belge.kimlik_no', session('kimlik_no'))
-            ->get();
-        $results =  DB::table('sinav_sonuc_belge')->where('email', session('email'))->get();
+        $resultDocuments = DB::table('sinav_sonuc_belge')->where('email', $email)->get();
+        $students = StudentInfo::where('aday_no', $aday_no)->get();
+
         $student = $students[0];
-        $result = $results[0];
-        return view('user.pages.exam-result-document', compact('student', 'count', 'result', 'countSonuc'));
+        $resultDocument = $resultDocuments[0];
+        return view('admin.pages.panel.result-document', compact('resultDocument', 'student'));
     }
 
-    public function resultDocumentPrintOut()
+    public function resultDocumentPrint($aday_no, $email)
     {
         $students =  DB::table('sinav_giris_belge')
             ->join('student_info', 'sinav_giris_belge.aday_no', '=', 'student_info.aday_no')
             ->select('sinav_giris_belge.*', 'student_info.aday_resim')
-            ->where('sinav_giris_belge.kimlik_no', session('kimlik_no'))
+            ->where('sinav_giris_belge.aday_no', $aday_no)
             ->get();
-        $results =  DB::table('sinav_sonuc_belge')->where('email', session('email'))->get();
+        $results =  DB::table('sinav_sonuc_belge')->where('email', $email)->get();
         $student = $students[0];
         $result = $results[0];
 
@@ -396,5 +437,18 @@ class UserController extends Controller
 
         // Output the generated PDF to Browser
         return back()->with($dompdf->stream('HMKÜYÖS - 2022 SINAV SONUÇ BELGESİ'));
+    }
+
+    public function deleteAllstudent()
+    {
+        StudentInfo::truncate();
+        Student::truncate();
+        DB::table('sinav_giris_belge')->delete();
+        Sinif::updateOrCreate([
+            'yerlesen_ogrenci' => 0
+        ]);
+        DB::table('kullanilan_sinif_sayisi')->delete();
+        return back()
+            ->with('message_deleteAllsuccess', 'Tüm öğrenci bilgileri başarıyla silindi.');
     }
 }

@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\Student;
 use App\Models\StudentInfo;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
@@ -19,36 +20,35 @@ class LoginController extends Controller
     public function login()
     {
         $this->validate(request(), [
-            'aday_no' =>'required|numeric',
+            'email' =>'required',
             'password' => 'required'
         ]);
 
         $credentials = [
-            'name' => request('aday_no'),
+            'name' => request('email'),
             'password' => request('password'),
             'authorization'=> true
         ];
 
-        $kimlik = DB::table('student')->where('aday_no', request('aday_no'))->get();
+        $kimlik = Student::where('email', request('email'))->get();
 
         if (Auth::guard('admin')->attempt($credentials))
         {
             request()->session()->regenerate();
             return redirect()->intended('admin');
         }
-        elseif (isset($kimlik[0]->aday_no) == request('aday_no') && Hash::check(request('password'), $kimlik[0]->password))
+        elseif (isset($kimlik[0]->email) == request('email') && Hash::check(request('password'), $kimlik[0]->password))
         {
             session_start();
             request()->session()->put('kimlik_no', $kimlik[0]->kimlik_no);
             request()->session()->put('email', $kimlik[0]->email);
-            request()->session()->put('aday_no', request('aday_no'));
             request()->session()->put('password', request('password'));
             request()->session()->regenerate();
             return redirect()->intended('kullanici-dogrula');
         }
         else
         {
-            $errors = ['Application number or password is incorrect!'];
+            $errors = ['Email or password is incorrect!'];
             return back()->withErrors($errors);
         }
     }
@@ -73,7 +73,7 @@ class LoginController extends Controller
             'answer' =>'required'
         ]);
 
-        $student = DB::table('student_info')->where('kimlik_no', session('kimlik_no'))->get();
+        $student = StudentInfo::where('kimlik_no', session('kimlik_no'))->get();
 
         if (Auth::guard('student')->attempt(['email' => session('email'), 'password' => session('password'), 'authorization'=> false]))
         {
